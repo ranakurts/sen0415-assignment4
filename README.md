@@ -611,3 +611,56 @@ Real things that went wrong or surprised me while I did this, in the order they 
 8. **The React warnings are not in `output.txt`.** PowerShell's `>` writes UTF-16, so I used `npm run all | Out-File -Encoding utf8 output.txt`. After that, the two React warnings still appeared in the terminal but not in the file, because React writes warnings to stderr and the pipe only takes stdout.
 
 9. **Tooling problem.** To try the four P7 errors I pressed `Ctrl + /` to uncomment lines, but on my Turkish keyboard this zoomed VS Code instead and my selected lines were replaced. I used *Edit → Toggle Line Comment* instead.
+
+## Bonus 2: Depth
+
+Bonus 2: Depth
+
+All experiments are in `js/depth.mjs` (run with `node js/depth.mjs`). Every output below is from my run.
+
+### D1: what does an array pattern really need?
+
+My question: does `const [a, b] = x` need `x` to be an array? Experiments:
+
+```js
+const [firstLetter, secondLetter, ...restLetters] = 'Suits'
+const [firstGenre, ...otherGenres] = new Set(['drama', 'crime', 'drama', 'sci-fi'])
+const [[firstShowInMap, firstLead]] = new Map([['Suits', 'Harvey'], ['The Mentalist', 'Patrick Jane']])
+const [onlyFirst] = spyShows          // a generator that logs every next()
+const [ep1, ep2, ep3] = episodeNumbers() // an infinite generator
+const [x] = { name: 'Suits' }          // a plain object
+const { 0: arrayFirst, length: showCount } = ['Suits', 'Awake', 'The Mentalist']
+```
+```
+D1 string: S u [ 'i', 't', 's' ]
+D1 set (duplicates already gone): drama [ 'crime', 'sci-fi' ]
+D1 map (first entry is itself an array): Suits Harvey
+D1 spy: next() gave Suits
+D1 spy result: Suits
+D1 infinite generator: 1 2 3
+D1 object with array pattern: TypeError - {(intermediate value)} is not iterable
+D1 object pattern on an array: Suits 3
+```
+**What I learned:** an array pattern does not need an array, it needs an **iterable**. It calls `value[Symbol.iterator]()` and then `next()` once per position. That is why a string gives letters, a `Set` gives values without duplicates, and a `Map` gives `[key, value]` pairs (so I needed a nested pattern `[[show, lead]]`). The spy shows `next()` was called **only once** for `[onlyFirst]`: the pattern takes only as many items as it needs, which is also why an **infinite** generator works (with a rest element `...rest` it would never finish). A plain object has no `Symbol.iterator`, so it fails with *is not iterable*. The other direction works: an object pattern on an array reads keys `0` and `length`, because an array is an object.
+
+### D2: order of evaluation and defaults
+
+```js
+function loudDefault(label) { console.log('D2 default computed for', label); return `default ${label}` }
+const [given = loudDefault('given'), missing = loudDefault('missing')] = ['Suits']
+const { title = 'Awake', subtitle = `${title} (2012)` } = {}
+eval("const { first = second, second = 'x' } = {}")
+```
+```
+D2 default computed for missing
+D2 values: Suits | default missing
+D2 earlier variable in a default: Awake (2012)
+D2 later variable in a default: ReferenceError - Cannot access 'second' before initialization
+```
+**What I learned:** a default is **lazy**: the function ran only for `missing`, never for `given`, because a value was there. So a default with a side effect (a log, an API call) happens only sometimes. Patterns run **left to right**: a default can use a variable that is earlier in the same pattern (`subtitle` uses `title`), but not a later one. That is the same "before initialization" error I got in Form 3 (log entry 2).
+
+### D3: destructuring in other places
+
+```js
+try { JSON.parse('{ bad json') } catch ({ name, message }) { ... }
+for (const key in
