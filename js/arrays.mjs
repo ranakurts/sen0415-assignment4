@@ -7,7 +7,16 @@ function minMax(numbers) {
 }
 const [lowest, highest] = minMax([4, 9, 2])
 console.log('form 1:', lowest, highest) // form 1: 2 9
-
+function shortestAndLongest(shows) {
+  const sorted = [...shows].sort((a, b) => a.seasons - b.seasons)
+  return [sorted[0].name, sorted[sorted.length - 1].name]
+}
+const [shortestShow, longestShow] = shortestAndLongest([
+  { name: 'Suits', seasons: 9 },
+  { name: 'Awake', seasons: 1 },
+  { name: 'The Mentalist', seasons: 7 },
+])
+console.log('form 1 (my data):', shortestShow, longestShow)
 // Form 2: skip an item and collect the rest, [, second, ...others]
 const myShows = ['Suits', 'Awake', 'The Mentalist']
 const [, secondShow, ...otherShows] = myShows
