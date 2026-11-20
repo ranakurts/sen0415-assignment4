@@ -1,7 +1,7 @@
 # Destructuring Field Guide
 
-Name: Your Full Name  
-Student number: 0000000000
+Name: Rana Neslihan Kurt
+Student number: 2300006496
 
 Bonuses claimed: none yet (write them here, for example **Bonus 1: Tests**).
 

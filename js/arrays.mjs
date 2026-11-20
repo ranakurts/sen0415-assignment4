@@ -1,4 +1,4 @@
-// Your Name, student number
+// Rana Neslihan Kurt, 2300006496
 // Array destructuring (forms 1 to 4). Plain JavaScript: run with `node js/arrays.mjs`.
 
 // Form 1 (worked example): take values out of an array by position.

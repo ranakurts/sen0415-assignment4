@@ -1,4 +1,4 @@
-// Your Name, student number
+// Rana Neslihan Kurt, 2300006496
 // The same six object forms as js/objects.mjs, now typed.
 
 type Task = { id: string; title: string; status: 'todo' | 'in-progress' | 'done' }

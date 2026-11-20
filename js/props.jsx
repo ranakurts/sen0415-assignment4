@@ -1,4 +1,4 @@
-// Your Name, student number
+// Rana Neslihan Kurt, 2300006496
 // Props and children in plain JavaScript (JSX). Run with `npx tsx js/props.jsx`.
 import { renderToStaticMarkup } from 'react-dom/server'
 

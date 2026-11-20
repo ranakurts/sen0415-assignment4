@@ -1,4 +1,4 @@
-// Your Name, student number
+// Rana Neslihan Kurt, 2300006496
 // What only TypeScript adds (topics T1 to T5). See the handout.
 
 // T1 (worked example): `{ a: string }` inside a pattern is a RENAME, not a type.

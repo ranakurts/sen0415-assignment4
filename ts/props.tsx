@@ -1,4 +1,4 @@
-// Your Name, student number
+// Rana Neslihan Kurt, 2300006496
 // Props and children in TypeScript. Run with `npx tsx ts/props.tsx`.
 import type { ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'

@@ -1,4 +1,4 @@
-// Your Name, student number
+// Rana Neslihan Kurt, 2300006496
 // Things that surprise people. Run with `node js/pitfalls.mjs`.
 
 // Pitfall 1 (worked example): destructuring undefined or null throws a TypeError.

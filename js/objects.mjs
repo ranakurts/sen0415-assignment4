@@ -1,4 +1,4 @@
-// Your Name, student number
+// Rana Neslihan Kurt, 2300006496
 // Object destructuring (forms 5 to 10). Run with `node js/objects.mjs`.
 
 // Form 5 (worked example): take properties out of an object by name.
