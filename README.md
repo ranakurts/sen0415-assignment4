@@ -664,3 +664,53 @@ D2 later variable in a default: ReferenceError - Cannot access 'second' before i
 ```js
 try { JSON.parse('{ bad json') } catch ({ name, message }) { ... }
 for (const key in
+## Bonus 3: Real code
+
+Bonus 3: Real code
+
+All cases are from open-source packages installed in this project's `node_modules`
+(TypeScript 5.8.3, tsx, and `@types/react` from DefinitelyTyped). File and line are as on my machine.
+
+**Case 1 — Form 5, a real Node.js idiom.** `node_modules/typescript/lib/tsc.js`, line 3:
+```js
+const { enableCompileCache } = require("node:module");
+```
+Without destructuring: `const enableCompileCache = require("node:module").enableCompileCache;`
+TypeScript takes one function out of a module. The next line checks `if (enableCompileCache)`, because on older Node versions the field is simply missing and the pattern gives `undefined` instead of an error (Form 5: a missing field is `undefined`).
+
+**Case 2 — Form 1, the most common destructuring in React.** `node_modules/@types/react/index.d.ts`, line 1640 (in a doc example):
+```tsx
+const [count, setCount] = useState(0);
+```
+Without destructuring: `const state = useState(0); const count = state[0]; const setCount = state[1];`
+`useState` returns a tuple `[value, setter]`, so the names are chosen by position. This is exactly why React returns an array and not an object: with an array I can name the two values anything I like without a rename (Form 6).
+
+**Case 3 — React props and children (Form 5 + Form 11).** `node_modules/@types/react/index.d.ts`, line 419:
+```tsx
+type Props = { children: ReactNode }
+const Component = ({ children }: Props) => <div>{children}</div>
+<Component>hello</Component>
+```
+Without destructuring: `const Component = (props: Props) => <div>{props.children}</div>`
+Here there are **no other props**: the only thing in the props object is `children`, and its value is the text `hello` written between the tags. The type is written after the whole pattern (T1), and `children` is required (no `?`), so `<Component />` without content would be a compile error.
+
+**Case 4 — Form 1 on a function result, and a case where it makes the code worse.** `node_modules/tsx/dist/cli.mjs`, line 22:
+```js
+[W,p]=process.versions.node.split(".").slice(0,2).map(m=>Number.parseInt(m,10))
+```
+Without destructuring: `const parts = process.versions.node.split(".").map(Number); const W = parts[0]; const p = parts[1];`
+It reads the Node major and minor version (for me `24` and `11`). **Why I think this is worse:** this file is minified, so the names `W` and `p` say nothing, and the pattern hides that the two values mean "major" and "minor". In source code `const [major, minor] = ...` would be clear; with one-letter names the position is the only meaning, and swapping them would not give any error (Pitfall 5).
+
+**Case 5 — Form 6 (rename) used by a minifier.** `node_modules/tsx/dist/cli.mjs`, line 2:
+```js
+{stringify:Be}=JSON, ... {hasOwnProperty:Pr}=Object.prototype
+```
+Without destructuring: `const Be = JSON.stringify; const Pr = Object.prototype.hasOwnProperty;`
+The build tool takes methods out of built-in objects once and renames them to short names. Later the code calls `Pr.call(e,t)`: because `hasOwnProperty` was taken out of the object, it lost its `this`, so it has to be called with `.call`. This is a real trap of destructuring methods: the function is copied, not bound to the object.
+
+**Case 6 — Form 12, nested loops over entries.** `node_modules/tsx/dist/cli.mjs`, line 3:
+```js
+for(let[u,n]of Object.entries(t)){for(let[s,r]of Object.entries(n)) ... }
+```
+Without destructuring: `for (const entry of Object.entries(t)) { const u = entry[0]; const n = entry[1]; ... }`
+The terminal colour table is an object of objects, so the code loops over the outer pairs and then over the inner pairs, destructuring each `[key, value]` pair, exactly like my Form 12 example.
