@@ -1,0 +1,142 @@
+﻿
+> destructuring-guide@0.0.0 all
+> npm run js && npm run ts
+
+
+> destructuring-guide@0.0.0 js
+> node js/arrays.mjs && node js/objects.mjs && node js/params.mjs && node js/pitfalls.mjs && tsx js/props.jsx
+
+form 1: 2 9
+form 1 (my data): Awake Suits
+form 2: Awake [ 'The Mentalist' ]
+form 2 (too short): undefined []
+form 3: Awake Suits
+form 4 (empty): Suits Awake
+form 4 (undefined): The Mentalist Awake
+form 4 (null): null The Mentalist
+form 5: Buy milk todo
+form 5 (my data): The Mentalist Patrick Jane
+form 6: Suits 9
+form 6 (old name): name is not defined
+form 7: unknown network no rating
+form 7 (null): null
+form 8: s1 { name: 'Suits', network: 'USA Network', seasons: 9 }
+form 8 (spread): { name: 'Suits', network: 'USA Network', seasons: 10 }
+form 9: Rana Suits [ 'Awake', 'The Mentalist' ]
+form 9 (missing nested): Cannot read properties of undefined (reading 'firstName')
+form 10: Awake 8
+form 10 (missing key): not rated
+form 11: { title: 'Read', status: 'todo' }
+form 11 (my data): Awake: 1 season(s), finished: true
+form 11 (no argument): undefined: 1 season(s), finished: true
+form 11 (without = {}): Cannot destructure property 'title' of 'undefined' as it is undefined.
+form 11b: S2E5
+form 12 (object): Suits 9
+form 12 (object): Awake 8
+form 12 (object): The Mentalist 8.5
+form 12 (map): Suits S9E10
+form 12 (map): Awake S1E13
+form 12 (map): The Mentalist S7E13
+pitfall 1: TypeError
+pitfall 2: null 1
+pitfall 3 (no parentheses): SyntaxError - Unexpected token '='
+pitfall 3 (with parentheses): Awake 1
+pitfall 4: [ 'Suits', 'Awake', 'The Mentalist' ]
+pitfall 4 (spread copy): {
+  owner: 'Rana',
+  shows: [ 'Suits', 'Awake', 'The Mentalist', 'House' ]
+}
+pitfall 5 (object): Suits 9
+pitfall 5 (array): Suits 9 | 9 Suits
+A: <section><h2>Hi</h2>text</section>
+B: <section><h2>Hi</h2>text</section>
+P1 props object: { name: 'Suits', children: 'A lawyer drama' }
+P1 whole: <article><h3>Suits</h3><p>A lawyer drama</p></article>
+P1 parts: <article><h3>Suits</h3><p>A lawyer drama</p></article>
+P2 between tags: <article><h3>Awake</h3><p>Two worlds</p></article>
+P2 as attribute: <article><h3>Awake</h3><p>Two worlds</p></article>
+P2 both: <article><h3>Awake</h3><p>from tags</p></article>
+P3 string: <div>The Mentalist</div>
+P3 number: <div>7</div>
+P3 zero: <div>0</div>
+P3 one element: <div><b>Suits</b></div>
+P3 several elements: <div><b>Suits</b><i>Awake</i></div>
+P3 array: <div>SuitsAwake</div>
+P3 undefined: <div></div>
+P3 null: <div></div>
+P3 false: <div></div>
+P3 true: <div></div>
+P3 missing: <div></div>
+P3 function as child: <div></div>
+P3 function called: <div><b>Patrick Jane</b></div>
+P3 object: Objects are not valid as a React child (found: object with keys {name}). If you meant to render a collection of children, use an array instead.
+P4 rest: { id: 'list', className: 'dark', 'data-count': '3' }
+P4: <section id="list" class="dark" data-count="3"><h2>My watchlist</h2>3 shows</section>
+P4 spread first: <section class="fixed">Suits</section>
+P4 spread last: <section class="mine">Suits</section>
+P4 key in props: undefined
+P4 key: <span>Suits</span>
+P5 props: <main><header><h1>Suits</h1></header><div>Harvey and Mike</div><footer><small>9 seasons</small></footer></main>
+P5 children: <main><h1>Suits</h1><p>Harvey and Mike</p><small>9 seasons</small></main>
+P6 given: <p>Suits: 9</p>
+P6 missing: <p>Awake: not rated yet</p>
+P6 undefined: <p>Awake: not rated yet</p>
+P6 null: <p>The Mentalist: </p>
+changing props: TypeError - Cannot assign to read only property 'show' of object '#<Object>'
+changer: <p>Suits</p>
+
+> destructuring-guide@0.0.0 ts
+> tsx ts/arrays.ts && tsx ts/objects.ts && tsx ts/params.ts && tsx ts/types.ts && tsx ts/props.tsx
+
+form 1: 2 9
+form 1 (my data): Awake Suits
+form 2: Awake [ 'The Mentalist' ]
+form 3: Awake Suits
+form 4: Suits Awake
+form 5: Buy milk todo
+form 5 (my data): Suits 9
+form 6: Suits 9
+form 7: unknown network 0
+form 8: s1 { name: 'Suits', network: 'USA Network', seasons: 9 }
+form 9: Rana Suits [ 'Awake', 'The Mentalist' ]
+form 10: Awake 8
+form 11: { title: 'Read', status: 'todo' }
+form 11 (my data): Awake: 1 season(s), finished: true
+form 11 (no argument): untitled: 1 season(s), finished: true
+form 11b: S2E5
+form 12 (object): Suits 9
+form 12 (object): Awake 8
+form 12 (object): The Mentalist 8.5
+form 12 (map): Suits S9E10
+form 12 (map): Awake S1E13
+form 12 (map): The Mentalist S7E13
+T1: 1
+T1 fixed: Suits (9)
+T2 tuple: SUITS 10
+T2 without as const: Awake 1
+T2 with as const: Awake 1
+T2 seasons as number: 1
+T3 checked: SUITS
+T3 default: SUITS
+T3 tuple: SUITS
+T4 all given: Suits | 9.0 | Turkish
+T4 only title: Awake | no rating | English
+T5 at runtime: undefined
+T5 fixed: 0
+<section><h2>Hi</h2>text</section>
+P1 whole: <article><h3>Suits</h3><p>A lawyer drama</p></article>
+P1 parts: <article><h3>Suits</h3><p>A lawyer drama</p></article>
+P2 between tags: <article><h3>Awake</h3><p>Two worlds</p></article>
+P2 as attribute: <article><h3>Awake</h3><p>Two worlds</p></article>
+P3 number: <div>7</div>
+P3 false: <div></div>
+P3 function called: <div><b>Patrick Jane</b></div>
+P4: <section id="list" class="dark"><h2>My watchlist</h2>3 shows</section>
+P5 props: <main><header><h1>Awake</h1></header><div>Two worlds</div><footer></footer></main>
+P5 children: <main><h1>Awake</h1><p>Two worlds</p></main>
+P6 missing: <p>Awake: not rated yet</p>
+P6 given: <p>Suits: 9</p>
+P7 ReactNode: <p><b>Network:</b> USA Network</p>
+P7 PropsWithChildren: <span class="gold">Favorite</span>
+P7 ComponentProps: <button type="button" disabled="">Watch Suits</button>
+P7 no children: <p>Awake</p>
