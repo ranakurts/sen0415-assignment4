@@ -698,8 +698,43 @@ D5 deep pattern on missing data: Cannot read properties of undefined (reading 'd
 
 Bonus 3: Real code
 
-All cases are from open-source packages installed in this project's `node_modules`
-(TypeScript 5.8.3, tsx, and `@types/react` from DefinitelyTyped). File and line are as on my machine.
+Three sources, as the handout asks:
+
+- **The Task Manager from Assignment 3** (my own copy of the starter project): cases A to C.
+- **Installed libraries in `node_modules`**: `tsx` and `@types/react` (DefinitelyTyped): cases 2 to 6.
+- **An open-source project of my choice: the TypeScript compiler** (Microsoft, Apache-2.0, installed here as `typescript` 5.8.3): case 1.
+
+File and line numbers are as in my files.
+
+### From the Task Manager (Assignment 3)
+
+**Case A — Form 1 with a React hook.** `assignment3/src/App.tsx`, line 72:
+```tsx
+const [state, dispatch] = useReducer(taskReducer, initialState)
+```
+Without destructuring: `const pair = useReducer(taskReducer, initialState); const state = pair[0]; const dispatch = pair[1];`
+`useReducer` returns a tuple `[state, dispatch]`. This is the line the handout mentions; I wrote it in Assignment 3 without thinking of it as destructuring.
+
+**Case B — React props with no children.** `assignment3/src/TaskRow.tsx`, line 11:
+```tsx
+export default function TaskRow({ task, onNext, onDelete }: TaskRowProps) {
+```
+used in `App.tsx`, lines 60 to 65:
+```tsx
+<TaskRow key={t.id} task={t} onNext={() => dispatch({ type: 'advance', id: t.id })}
+         onDelete={() => dispatch({ type: 'remove', id: t.id })} />
+```
+Without destructuring: `function TaskRow(props: TaskRowProps) { ... props.task.title ... props.onNext ... }`
+**What is a prop and what is children here:** `task`, `onNext` and `onDelete` are props (attributes in the JSX). There are **no children**: `<TaskRow ... />` is self-closing and `TaskRowProps` has no `children` field, so giving it content would be the TS2322 error from P7. `key={t.id}` is written like a prop, but as I saw in P4 React keeps it and `TaskRow` never receives it. This is Form 5 in a parameter (Form 11) with the type after the whole pattern (T1).
+
+**Case C — Form 11 with an inline type.** `assignment3/src/App.tsx`, line 8:
+```tsx
+function AddForm({ dispatch }: { dispatch: Dispatch<Action> }) {
+```
+Without destructuring: `function AddForm(props: { dispatch: Dispatch<Action> }) { const dispatch = props.dispatch; ... }`
+The component only needs one prop, so the type is written inline after the pattern. If I wrote `{ dispatch: Dispatch<Action> }` *inside* the pattern, it would be the T1 rename mistake.
+
+### From installed libraries and the TypeScript project
 
 **Case 1 — Form 5, a real Node.js idiom.** `node_modules/typescript/lib/tsc.js`, line 3:
 ```js

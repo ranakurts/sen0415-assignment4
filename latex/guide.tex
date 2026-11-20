@@ -1321,10 +1321,90 @@ long paths through data that may be incomplete.
 
 Bonus 3: Real code
 
-All cases are from open-source packages installed in this project's
-\passthrough{\lstinline!node\_modules!} (TypeScript 5.8.3, tsx, and
-\passthrough{\lstinline!@types/react!} from DefinitelyTyped). File and
-line are as on my machine.
+Three sources, as the handout asks:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{The Task Manager from Assignment 3} (my own copy of the
+  starter project): cases A to C.
+\item
+  \textbf{Installed libraries in
+  \passthrough{\lstinline!node\_modules!}}:
+  \passthrough{\lstinline!tsx!} and
+  \passthrough{\lstinline!@types/react!} (DefinitelyTyped): cases 2 to
+  6.
+\item
+  \textbf{An open-source project of my choice: the TypeScript compiler}
+  (Microsoft, Apache-2.0, installed here as
+  \passthrough{\lstinline!typescript!} 5.8.3): case 1.
+\end{itemize}
+
+File and line numbers are as in my files.
+
+\hypertarget{from-the-task-manager-assignment-3}{%
+\subsubsection{From the Task Manager (Assignment
+3)}\label{from-the-task-manager-assignment-3}}
+
+\textbf{Case A --- Form 1 with a React hook.}
+\passthrough{\lstinline!assignment3/src/App.tsx!}, line 72:
+
+\begin{lstlisting}
+const [state, dispatch] = useReducer(taskReducer, initialState)
+\end{lstlisting}
+
+Without destructuring:
+\passthrough{\lstinline!const pair = useReducer(taskReducer, initialState); const state = pair[0]; const dispatch = pair[1];!}
+\passthrough{\lstinline!useReducer!} returns a tuple
+\passthrough{\lstinline![state, dispatch]!}. This is the line the
+handout mentions; I wrote it in Assignment 3 without thinking of it as
+destructuring.
+
+\textbf{Case B --- React props with no children.}
+\passthrough{\lstinline!assignment3/src/TaskRow.tsx!}, line 11:
+
+\begin{lstlisting}
+export default function TaskRow({ task, onNext, onDelete }: TaskRowProps) {
+\end{lstlisting}
+
+used in \passthrough{\lstinline!App.tsx!}, lines 60 to 65:
+
+\begin{lstlisting}
+<TaskRow key={t.id} task={t} onNext={() => dispatch({ type: 'advance', id: t.id })}
+         onDelete={() => dispatch({ type: 'remove', id: t.id })} />
+\end{lstlisting}
+
+Without destructuring:
+\passthrough{\lstinline!function TaskRow(props: TaskRowProps) \{ ... props.task.title ... props.onNext ... \}!}
+\textbf{What is a prop and what is children here:}
+\passthrough{\lstinline!task!}, \passthrough{\lstinline!onNext!} and
+\passthrough{\lstinline!onDelete!} are props (attributes in the JSX).
+There are \textbf{no children}:
+\passthrough{\lstinline!<TaskRow ... />!} is self-closing and
+\passthrough{\lstinline!TaskRowProps!} has no
+\passthrough{\lstinline!children!} field, so giving it content would be
+the TS2322 error from P7. \passthrough{\lstinline!key=\{t.id\}!} is
+written like a prop, but as I saw in P4 React keeps it and
+\passthrough{\lstinline!TaskRow!} never receives it. This is Form 5 in a
+parameter (Form 11) with the type after the whole pattern (T1).
+
+\textbf{Case C --- Form 11 with an inline type.}
+\passthrough{\lstinline!assignment3/src/App.tsx!}, line 8:
+
+\begin{lstlisting}
+function AddForm({ dispatch }: { dispatch: Dispatch<Action> }) {
+\end{lstlisting}
+
+Without destructuring:
+\passthrough{\lstinline!function AddForm(props: \{ dispatch: Dispatch<Action> \}) \{ const dispatch = props.dispatch; ... \}!}
+The component only needs one prop, so the type is written inline after
+the pattern. If I wrote
+\passthrough{\lstinline!\{ dispatch: Dispatch<Action> \}!} \emph{inside}
+the pattern, it would be the T1 rename mistake.
+
+\hypertarget{from-installed-libraries-and-the-typescript-project}{%
+\subsubsection{From installed libraries and the TypeScript
+project}\label{from-installed-libraries-and-the-typescript-project}}
 
 \textbf{Case 1 --- Form 5, a real Node.js idiom.}
 \passthrough{\lstinline!node\_modules/typescript/lib/tsc.js!}, line 3:
