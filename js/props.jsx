@@ -61,3 +61,64 @@ try {
 } catch (error) {
   console.log('P3 object:', error.message)
 }
+// P4: take title and children out, collect the rest, spread the rest onto a DOM element
+function Panel({ title, children, ...rest }) {
+  console.log('P4 rest:', rest)
+  return <section {...rest}><h2>{title}</h2>{children}</section>
+}
+console.log('P4:', renderToStaticMarkup(
+  <Panel title="My watchlist" id="list" className="dark" data-count="3">3 shows</Panel>
+))
+
+// the order decides who wins: whatever comes LATER overwrites
+function PanelSpreadFirst({ children, ...rest }) {
+  return <section {...rest} className="fixed">{children}</section>
+}
+function PanelSpreadLast({ children, ...rest }) {
+  return <section className="fixed" {...rest}>{children}</section>
+}
+console.log('P4 spread first:', renderToStaticMarkup(<PanelSpreadFirst className="mine">Suits</PanelSpreadFirst>))
+console.log('P4 spread last:', renderToStaticMarkup(<PanelSpreadLast className="mine">Suits</PanelSpreadLast>))
+
+// key looks like a prop, but React keeps it for itself
+function WithKey(props) {
+  console.log('P4 key in props:', props.key)
+  return <span>{props.name}</span>
+}
+console.log('P4 key:', renderToStaticMarkup(<WithKey key="s1" name="Suits" />))
+
+// P5: the same page built twice
+// version 1: named props for each slot
+function ShowPageProps({ header, body, footer }) {
+  return <main><header>{header}</header><div>{body}</div><footer>{footer}</footer></main>
+}
+// version 2: children only, the caller decides everything inside
+function ShowPageChildren({ children }) {
+  return <main>{children}</main>
+}
+console.log('P5 props:', renderToStaticMarkup(
+  <ShowPageProps header={<h1>Suits</h1>} body="Harvey and Mike" footer={<small>9 seasons</small>} />
+))
+console.log('P5 children:', renderToStaticMarkup(
+  <ShowPageChildren><h1>Suits</h1><p>Harvey and Mike</p><small>9 seasons</small></ShowPageChildren>
+))
+
+// P6: a default for a prop (form 7). undefined triggers it, null does not.
+function Rating({ show, stars = 'not rated yet' }) {
+  return <p>{show}: {stars}</p>
+}
+console.log('P6 given:', renderToStaticMarkup(<Rating show="Suits" stars={9} />))
+console.log('P6 missing:', renderToStaticMarkup(<Rating show="Awake" />))
+console.log('P6 undefined:', renderToStaticMarkup(<Rating show="Awake" stars={undefined} />))
+console.log('P6 null:', renderToStaticMarkup(<Rating show="The Mentalist" stars={null} />))
+
+// extra: what happens if a component tries to change its props?
+function Changer(props) {
+  try {
+    props.show = 'changed'
+  } catch (error) {
+    console.log('changing props:', error.constructor.name, '-', error.message)
+  }
+  return <p>{props.show}</p>
+}
+console.log('changer:', renderToStaticMarkup(<Changer show="Suits" />))
