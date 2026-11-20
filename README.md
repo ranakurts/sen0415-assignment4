@@ -92,7 +92,7 @@ console.log('form 3:', favorite, secondFavorite)
 
 **Use it when:** two variables must change places, without a temporary variable.
 
-**Watch out:** the variables must be `let`, and the line needs the `;` in front. Without it JavaScript joins the line with the line above (see My own log, entry 1).
+**Watch out:** the variables must be `let`, and the line needs the `;` in front. Without it JavaScript joins the line with the line above (see My own log, entry 2).
 
 ### Form 4: array defaults, `const [a = 1, b = 2] = []`
 
@@ -371,7 +371,10 @@ copy.owner = 'Someone else'
 Output:
 ```
 pitfall 4: [ 'Suits', 'Awake', 'The Mentalist' ]
-pitfall 4 (spread copy): { owner: 'Rana', shows: [ 'Suits', 'Awake', 'The Mentalist', 'House' ] }
+pitfall 4 (spread copy): {
+  owner: 'Rana',
+  shows: [ 'Suits', 'Awake', 'The Mentalist', 'House' ]
+}
 ```
 *Why:* `shows` is a second name for **the same array**, so changing it changes `watchlist.shows`. Even spread is a **shallow** copy: `owner` was copied (so it stayed `'Rana'`), but the inner array is still shared.
 
