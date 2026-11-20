@@ -1,0 +1,9 @@
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,breakatwhitespace=false,columns=fullflexible,keepspaces=true,frame=single,framerule=0.3pt,rulecolor=\color{gray!50},backgroundcolor=\color{gray!6},showstringspaces=false,literate={→}{{$\rightarrow$}}1 {—}{{---}}1 {…}{{\ldots}}1}
+\usepackage{etoolbox}
+\AtBeginEnvironment{longtable}{\footnotesize}
+\setlength{\emergencystretch}{3em}
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+\sloppy

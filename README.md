@@ -3,7 +3,7 @@
 Name: Rana Neslihan Kurt  
 Student number: 2300006496
 
-Bonuses claimed: none.
+Bonuses claimed: **Bonus 1: LaTeX**, **Bonus 2: Depth**, **Bonus 3: Real code**, **Bonus 4: Git repository** (sections at the end).
 
 My data: my own TV show list — **Suits**, **Awake** and **The Mentalist**.
 Every output below is copied from `output.txt` (a real run of `npm run all` on my machine, Node 24.11.1, Windows).
@@ -330,6 +330,7 @@ form 12 (map): The Mentalist S7E13
 **Use it when:** I loop over key–value pairs of an object or a `Map`.
 
 **Watch out:** `Object.entries` turns the object into `[key, value]` pairs first; a `Map` already gives pairs. Every round of the loop is a new Form 1 on one pair.
+
 ## Pitfalls
 
 All five are in `js/pitfalls.mjs`.
@@ -663,7 +664,36 @@ D2 later variable in a default: ReferenceError - Cannot access 'second' before i
 
 ```js
 try { JSON.parse('{ bad json') } catch ({ name, message }) { ... }
-for (const key in
+for (const key in seasonsByShow) ...
+for (const [key, value] of Object.entries(seasonsByShow)) ...
+;[ratings.suits, ratings.awake] = [9, 8]
+;({ first: swapped.second, second: swapped.first } = { first: 'Suits', second: 'Awake' })
+```
+```
+D3 catch pattern: SyntaxError - Expected property name or '}' in JSON at position 2 (line 1 column 3)
+D3 for...in key: Suits
+D3 for...in key: Awake
+D3 for...of pair: Suits 9
+D3 for...of pair: Awake 1
+D3 targets are properties: { suits: 9, awake: 8 }
+D3 object pattern into properties: { second: 'Suits', first: 'Awake' }
+```
+**What I learned:** the `catch` parameter is a normal parameter, so Form 5 works there. `for...in` only gives **keys** as strings, so there is nothing to destructure; `for...of` with `Object.entries` gives pairs (Form 12). The targets of an assignment pattern do not have to be variables: any place I could write on the left of `=` works, also object properties. In the last line the rename syntax wrote `first` into `swapped.second`, so the pattern also swapped the names.
+
+### D5: when destructuring makes code worse
+
+```js
+const { data: { show: { details: { cast: [{ actor: { name: leadActor } }] } } } } = apiResponse
+// refactored:
+const leadActorRefactored = apiResponse.data?.show?.details?.cast[0]?.actor?.name ?? 'unknown'
+```
+```
+D5 deep pattern: Simon Baker
+D5 refactored: Simon Baker
+D5 deep pattern on missing data: Cannot read properties of undefined (reading 'details')
+```
+**What I learned:** both give the same value, but the deep pattern is hard to read (I had to count the braces), and it **crashes** as soon as one level is missing. The refactored line reads left to right like the path, and `?.` with `??` gives a fallback instead of an error. My rule now: destructure one or two levels, and use optional chaining for long paths through data that may be incomplete.
+
 ## Bonus 3: Real code
 
 Bonus 3: Real code
@@ -714,3 +744,34 @@ for(let[u,n]of Object.entries(t)){for(let[s,r]of Object.entries(n)) ... }
 ```
 Without destructuring: `for (const entry of Object.entries(t)) { const u = entry[0]; const n = entry[1]; ... }`
 The terminal colour table is an object of objects, so the code loops over the outer pairs and then over the inner pairs, destructuring each `[key, value]` pair, exactly like my Form 12 example.
+
+## Bonus 4: Git repository
+
+Bonus 4: Git repository — https://github.com/ranakurts/sen0415-assignment4
+
+The repository has a `.gitignore` that leaves out `node_modules`, and it runs after
+`git clone`, `npm install` and `npm run all`. The history shows the work in steps
+(`git log --oneline`): starter, my name, array forms, object forms, parameter and loop forms,
+pitfalls, props P1–P3 and P4–P6, the TypeScript forms, T1–T5, typed props P1–P7, `output.txt`,
+the README, and each bonus as its own commit. Honest note: I did all commits on the same evening
+(20 November), so the history is in many steps but not over several days.
+
+## Bonus 1: LaTeX
+
+Bonus 1: LaTeX
+
+The guide is also in `latex/guide.tex` with the compiled `latex/guide.pdf`. It has the same content
+as this README (all twelve entries, the pitfalls, T1–T5, props and children, the table, my log
+and the bonuses), a contents page with links to every section, code in `listings` boxes and real tables.
+
+Commands I used:
+```
+sed '1d' README.md > body.md     # drop the "# Destructuring Field Guide" line, the title page has it
+pandoc body.md -s --listings --toc -H latex/header.tex -V geometry:margin=2.2cm -V fontsize=10pt \
+  -V colorlinks=true -V title="Destructuring Field Guide" -V author="Rana Neslihan Kurt, 2300006496" \
+  -V date="SEN0415 Advanced Web Programming, Assignment 4" -o latex/guide.tex
+cd latex
+pdflatex guide.tex
+pdflatex guide.tex
+```
+(`pdflatex` twice so that the contents page and the links are correct.) The build finished with no errors and no overfull boxes.
