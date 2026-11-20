@@ -9,10 +9,26 @@ const [lowest, highest] = minMax([4, 9, 2])
 console.log('form 1:', lowest, highest) // form 1: 2 9
 
 // Form 2: skip an item and collect the rest, [, second, ...others]
-// TODO
+const myShows = ['Suits', 'Awake', 'The Mentalist']
+const [, secondShow, ...otherShows] = myShows
+console.log('form 2:', secondShow, otherShows)
+
+// what if the list is too short?
+const [, , , fourthShow, ...noMoreShows] = myShows
+console.log('form 2 (too short):', fourthShow, noMoreShows)
 
 // Form 3: swap two variables without a temporary, [a, b] = [b, a]
-// TODO
+let favorite = 'Suits'
+let secondFavorite = 'Awake'
+;[favorite, secondFavorite] = [secondFavorite, favorite] // the ; is needed: without it JS joins this line with the one above
+console.log('form 3:', favorite, secondFavorite)
 
 // Form 4: default values, const [a = 1] = []
-// TODO
+const [firstPick = 'Suits', secondPick = 'Awake'] = []
+console.log('form 4 (empty):', firstPick, secondPick)
+
+const [pickA = 'Suits', pickB = 'Awake'] = ['The Mentalist', undefined]
+console.log('form 4 (undefined):', pickA, pickB)
+
+const [pickC = 'Suits', pickD = 'Awake'] = [null, 'The Mentalist']
+console.log('form 4 (null):', pickC, pickD)
